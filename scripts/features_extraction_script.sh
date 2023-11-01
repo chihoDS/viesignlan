@@ -1,0 +1,1 @@
+python src/features/wholepose/features_extraction.py --videos_dir data/raw/AUTSL/val --keypoints_dir data/interim/AUTSL/keypoints/val --features_dir data/interim/AUTSL/features/val
