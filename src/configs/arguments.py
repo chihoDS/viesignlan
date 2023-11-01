@@ -30,15 +30,22 @@ class DataArguments():
  
         
         """   
-        self.parser.add_argument("--cfg_filename", type=str, default="src/features/skeleton_keypoints_generation/wholebody_w48_384x288.yaml", help="")
-        self.parser.add_argument("--pretrained_whole_body_pose_model", type=str, default="models/Wholepose/hrnet_w48_coco_wholebody_384x288-6e061c6a_20200922.pth", help="")
+        self.parser.add_argument("--keypoints_cfg", type=str, default="src/features/wholepose_processes/wholebody_w48_384x288.yaml", help="")
+        self.parser.add_argument("--pretrained_keypoints_generation_model", type=str, default="models/Wholepose/hrnet_w48_coco_wholebody_384x288-6e061c6a_20200922.pth", help="")
+        self.parser.add_argument("--features_cfg", type=str, default="src/features/wholepose_processes/wholebody_w48_384x384_adam_lr1e-3.yaml", help="")
+        self.parser.add_argument("--pretrained_features_extraction_model", type=str, default="models/Wholepose/wholebody_hrnet_w48_384x384.pth", help="")
         
-        self.parser.add_argument("--input_videos", type=str, default="data/raw/AUTSL/train", help="")
-        self.parser.add_argument("--output_keypoints", type=str, default="data/interim/AUTSL/keypoints/train", help="")
-        self.parser.add_argument("--output_frames", type=str, default="data/interim/AUTSL/frames/train", help="")
+        self.parser.add_argument("--videos_dir", type=str, default="data/raw/AUTSL/train", help="")
+        self.parser.add_argument("--keypoints_dir", type=str, default="data/interim/AUTSL/keypoints/train", help="")
+        self.parser.add_argument("--frames_dir", type=str, default="data/interim/AUTSL/frames/train", help="")
+        self.parser.add_argument("--features_dir",type=str, default="data/interim/AUTSL/features/train", help="path to output feature dataset")
+        self.parser.add_argument("--flow_dir",type=str, default="data/interim/AUTSL/flow/train", help="path to output flow dataset")
         
         self.parser.add_argument("--multi_scales", type=list, default=[512,640], help="")
-        self.parser.add_argument("--resolution", type=int, default=512, help="")
+        self.parser.add_argument("--keypoints_resolution", type=int, default=512, help="")
+        self.parser.add_argument("--features_resolution", type=int, default=512, help="")
+
+        self.parser.add_argument("--istrain", type=bool, default=False, help="generate training data or not")
         
         
         
