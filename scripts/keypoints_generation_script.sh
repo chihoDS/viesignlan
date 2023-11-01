@@ -1,0 +1,1 @@
+python src/features/skeleton_keypoints_generation/keypoints_generation.py --log_file outputs/logs/log_val_keypoints_generation.txt --input_videos data/raw/AUTSL/val --output_keypoints data/interim/AUTSL/keypoints/val
