@@ -34,7 +34,8 @@ class DataArguments():
         self.parser.add_argument("--pretrained_whole_body_pose_model", type=str, default="models/Wholepose/hrnet_w48_coco_wholebody_384x288-6e061c6a_20200922.pth", help="")
         
         self.parser.add_argument("--input_videos", type=str, default="data/raw/AUTSL/train", help="")
-        self.parser.add_argument("--output_keypoints", type=str, default="data/processed/AUTSL/keypoints/train", help="")
+        self.parser.add_argument("--output_keypoints", type=str, default="data/interim/AUTSL/keypoints/train", help="")
+        self.parser.add_argument("--output_frames", type=str, default="data/interim/AUTSL/frames/train", help="")
         
         self.parser.add_argument("--multi_scales", type=list, default=[512,640], help="")
         self.parser.add_argument("--resolution", type=int, default=512, help="")
