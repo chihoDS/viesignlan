@@ -1,10 +1,14 @@
 import cv2
 import numpy as np
-from pathlib import Path
+import sys
 import logging
+from pathlib import Path
 
 sys.path.append(str(Path().cwd() / 'src'))
-from utils import onfig_logger
+from utils import config_logger
+
+sys.path.append(str(Path().cwd() / 'src/configs'))
+from arguments import DataArguments
 
 logger = logging.getLogger(__name__)
 
@@ -39,45 +43,50 @@ def main():
 
     selected_joints = np.concatenate(([0,1,2,3,4,5,6,7,8,9,10], 
                         [91,95,96,99,100,103,104,107,108,111],[112,116,117,120,121,124,125,128,129,132]), axis=0) 
-    folder = Path(args.input_videos)
-    if not folder.exists():
-        logger.error("input_videos does not exist")
+    
+    input_videos_path = Path(args.videos_dir)
+    if not input_videos_path.exists():
+        logger.error("videos_dir does not exist")
         return
     
-    npy_folder = Path(args.output_keypoints)
-    if not npy_folder.exists():
-        npy_folder.error("input_videos does not exist")
+    input_npys_path = Path(args.keypoints_dir)
+    if not input_npys_path.exists():
+        logger.error("keypoints_dir does not exist")
         return
     
-    out_folder = Path(args.output_frames)
-    if not out_foler.exists():  
-          out_folder.mkdir(parents=True, exist_ok=True)
+    output_path = Path(args.frames_dir)
+    if not output_path.exists():  
+          output_path.mkdir(parents=True, exist_ok=True)
 
+    logger.info("START GENERATION!")  
 
-    for files in folder.glob('*'):
-        for file in files:
-            cap = cv2.VideoCapture(file)
-            npy = np.load(Path(npy_folder, '{}.npy'.format(file.stem))).astype(np.float32)
-            npy = npy[:, selected_joints, :2]
-            npy[:, :, 0] = 512 - npy[:, :, 0]
-            xy_max = npy.max(axis=1, keepdims=False).max(axis=0, keepdims=False)
-            xy_min = npy.min(axis=1, keepdims=False).min(axis=0, keepdims=False)
-            assert xy_max.shape == (2,)
-            xy_center = (xy_max + xy_min) / 2 - 20
-            xy_radius = (xy_max - xy_center).max(axis=0)
-            index = 0
-            while True:
-                ret, frame = cap.read()
-                if ret:
-                    image = crop(frame, xy_center, xy_radius)
-                else:
-                    break
-                index = index + 1
-                image = cv2.resize(image, (256,256))
-                if not Path(out_folder, os.path.exists(os.path.join(out_folder, name[:-10])):
-                    os.makedirs(os.path.join(out_folder, name[:-10]))
-                cv2.imwrite(os.path.join(out_folder, name[:-10], '{:04d}.jpg'.format(index)), image)
-                print(os.path.join(out_folder, name[:-10], '{:04d}.jpg'.format(index)))
+    for path in input_videos_path.glob('*'):
+        logger.info('----Processing {}.'.format(path))
+
+        cap = cv2.VideoCapture(str(path))
+        npy = np.load(Path(input_npys_path, '{}.npy'.format(path.stem))).astype(np.float32)
+        npy = npy[:, selected_joints, :2]
+        npy[:, :, 0] = 512 - npy[:, :, 0]
+        xy_max = npy.max(axis=1, keepdims=False).max(axis=0, keepdims=False)
+        xy_min = npy.min(axis=1, keepdims=False).min(axis=0, keepdims=False)
+        assert xy_max.shape == (2,)
+        xy_center = (xy_max + xy_min) / 2 - 20
+        xy_radius = (xy_max - xy_center).max(axis=0)
+        index = 0
+        while True:
+            ret, frame = cap.read()
+            if ret:
+                image = crop(frame, xy_center, xy_radius)
+            else:
+                break
+            index = index + 1
+            image = cv2.resize(image, (256,256))
+
+            if not Path(output_path, path.stem).exits():
+                Path(output_path, path.stem).mkdir(parents=True, exist_ok=True)
+            outfile = output_path / path.stem / '{:04d}.jpg'.format(index)
+            cv2.imwrite(str(outfile), image)
+            logger.info("Save to {}".format(outfile))
                 
                 
 if __name__ == '__main__':
