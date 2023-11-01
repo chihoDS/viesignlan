@@ -30,7 +30,6 @@ class DataArguments():
  
         
         """   
-        self.parser.add_argument("--log_file", type=str, default=None, help="path to logging file txt which store logged information")
         self.parser.add_argument("--cfg_filename", type=str, default="src/features/skeleton_keypoints_generation/wholebody_w48_384x288.yaml", help="")
         self.parser.add_argument("--pretrained_whole_body_pose_model", type=str, default="models/Wholepose/hrnet_w48_coco_wholebody_384x288-6e061c6a_20200922.pth", help="")
         
